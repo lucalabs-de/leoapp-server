@@ -23,6 +23,6 @@
 
   echo "+OK";
 
-	$db->close();
+  $db->close();
 
 ?>

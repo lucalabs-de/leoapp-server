@@ -20,6 +20,7 @@
 		    $query = "SELECT uname FROM Users WHERE uid = ".$id;
 		    $res = $db->query($query);
 
+
 		    if($res === false)
 		      die($db->error);
 

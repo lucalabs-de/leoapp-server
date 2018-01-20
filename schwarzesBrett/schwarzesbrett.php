@@ -7,7 +7,7 @@
 	if ($db->connect_error)
     	die("-connection failed: ".$db->connect_error);
 
-    $sql = "SELECT Adressat,Titel,Inhalt, UNIX_TIMESTAMP(Erstelldatum) as Erstell, UNIX_TIMESTAMP(Ablaufdatum) as Ablauf FROM Einträge WHERE Ablaufdatum >= '".$date."'";
+    $sql = "SELECT Adressat,Titel,Inhalt, UNIX_TIMESTAMP(Erstelldatum) as Erstell, UNIX_TIMESTAMP(Ablaufdatum) as Ablauf FROM Eintraege WHERE Ablaufdatum >= '".$date."'";
     $result = $db->query($sql);
 
     $i = 0;

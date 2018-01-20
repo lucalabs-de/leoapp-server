@@ -10,7 +10,7 @@
   $user = $db->real_escape_string($_GET['user']);
   $answer = $db->real_escape_string($_GET['answer']);
 
-  $query = "INSERT INTO Result VALUES ('null', '".$user."', '".$answer."')";
+  $query = "INSERT INTO Result VALUES (null, ".$user.", ".$answer.")";
   $result = $db->query($query);
 
   if($result === false)
@@ -18,6 +18,6 @@
 
   echo "+OK";
 
-	$db->close();
+  $db->close();
 
 ?>

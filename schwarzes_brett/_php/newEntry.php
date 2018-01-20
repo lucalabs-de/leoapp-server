@@ -8,7 +8,7 @@
 		die("-ERR db");
 
 	$adressat = $_GET['to'];
-
+	
 	$url = 'null';
 
 	if($adressat == "")
@@ -47,16 +47,15 @@
 
 	$inhalt = str_replace("_ss_", "ß", $inhalt);
 
-
+	
 	if($titel==""||$inhalt==""||$ablaufdatum=="")
 		die("-ERR m");
 
-	$query = "INSERT INTO Einträge VALUES ('null', 'null', '".$adressat."', '".$titel."', '".$inhalt."', 'null' , '".$heute."', '".$ablaufdatum."')";
+	$query = "INSERT INTO Eintraege VALUES (null, 0, '".$adressat."', '".$titel."', '".$inhalt."', 'null', '".$heute."', '".$ablaufdatum."')";
 
 
 	$result = $db->query($query);
 	if ($result === false) {
-		echo $db->error;
 		die("-ERR db");
 	}
 

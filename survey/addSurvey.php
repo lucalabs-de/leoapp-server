@@ -56,10 +56,13 @@
 	//INSERT ANSWERS
 
 	foreach (explode("_;_", $answers) as $answer) {
-	  $query = "INSERT INTO Answers VALUES ('null', '".$id."', '".$answer."')";
+	  $query = "INSERT INTO Answers VALUES (null, ".$id.", '".$answer."')";
 	  $result = $db->query($query);
-	  if ($result === false)
-		die("-error in query");
+		if ($result === false) {
+//			echo $db->error;
+			die("-error in query");
+
+		}
 	}
 
 	echo "+OK";

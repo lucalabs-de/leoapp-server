@@ -46,21 +46,21 @@
 
   }
 
-	$query = "SELECT title as t FROM Survey WHERE owner=".$survey;
+  $query = "SELECT title as t FROM Survey WHERE owner=".$survey;
 
-	$result3 = $db->query($query);
-	$array = $result3->fetch_assoc();
+  $result3 = $db->query($query);
+  $array = $result3->fetch_assoc();
 
 
-	echo "_;;_".$array['t'];
+  echo "_;;_".$array['t'];
 
   $query = "SELECT COUNT(DISTINCT r.user) as count FROM Answers a JOIN Survey s ON s.owner = a.survey JOIN Result r ON r.answer = a.id WHERE a.id IN (SELECT id FROM Answers WHERE survey=".$survey.")";
 
   $result4 = $db->query($query);
-	$array = $result4->fetch_assoc();
+  $array = $result4->fetch_assoc();
 
   echo "_;;_".$array['count'];
 
-	$db->close();
+  $db->close();
 
 ?>

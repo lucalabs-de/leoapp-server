@@ -21,6 +21,6 @@
 
   }
 
-	$db->close();
+  $db->close();
 
 ?>
