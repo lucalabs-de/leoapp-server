@@ -22,13 +22,13 @@
     case 'EF':
     case 'Q1':
     case 'Q2':
-      $query = "SELECT COUNT(*) as c FROM Users WHERE uklasse = ".$to;
+      $query = "SELECT COUNT(*) as c FROM Users WHERE uklasse = '".$to."'";
       break;
     case 'Sek II':
-      $query = "SELECT COUNT(*) as c FROM Users WHERE uklasse = Q1 OR uklasse = Q2 OR uklasse = EF";
+      $query = "SELECT COUNT(*) as c FROM Users WHERE uklasse = 'Q1' OR uklasse = 'Q2' OR uklasse = 'EF'";
       break;
     case 'Sek I':
-      $query = "SELECT COUNT(*) as c FROM Users WHERE uklasse <> Q1 AND uklasse <> Q2 AND uklasse <> EF";
+      $query = "SELECT COUNT(*) as c FROM Users WHERE uklasse <> 'Q1' AND uklasse <> 'Q2' AND uklasse <> 'EF'";
     default:
       $query = "SELECT COUNT(*) as c FROM Users";
       break;
