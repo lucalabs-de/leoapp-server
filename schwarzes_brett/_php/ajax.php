@@ -64,7 +64,7 @@
 		if($titel==""||$inhalt==""||$ablaufdatum=="")
 			die("-ERR m");
 
-		$query = "INSERT INTO Eintraege VALUES ('null', 'null', '".$adressat."', '".$titel."', '".$inhalt."', '".$url."' , '".$heute."', '".$ablaufdatum."')";
+		$query = "INSERT INTO Eintraege VALUES (null, 0, '".$adressat."', '".$titel."', '".$inhalt."', '".$url."' , '".$heute."', '".$ablaufdatum."')";
 
 
 		$result = $db->query($query);
