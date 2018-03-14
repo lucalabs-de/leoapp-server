@@ -14,7 +14,7 @@
 	$result = $db->query($sql);
 
 	if ($result === false)
-		die "-ERR";
+		die("-ERR");
 
 	echo "+OK";
 
