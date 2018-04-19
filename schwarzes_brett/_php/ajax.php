@@ -1,6 +1,7 @@
 <?php
 
 	require_once('../../dbconfig.php');
+	require('../_fpdf/fpdf181/fpdf.php');
 
 	$db = new mysqli(dbhost, dbuser, dbpass, dbname);
 
@@ -26,6 +27,8 @@
 
 	if($toArr == "")
 		die("-ERR m");
+
+	$printAdr = "";
 
 	foreach ($toArr as $adressat) {
 		if($adressat == "sek1") {
@@ -66,15 +69,23 @@
 
 		$query = "INSERT INTO Eintraege VALUES (null, 0, '".$adressat."', '".$titel."', '".$inhalt."', '".$url."' , '".$heute."', '".$ablaufdatum."')";
 
-
 		$result = $db->query($query);
 		if ($result === false) {
 			echo $db->error;
 			die("-ERR db");
 		}
 
+		$printAdr .= $adressat." ";
+
 		echo "+OK";
 	}
+
+	$pdf = new FPDF();
+	$pdf->AddPage();
+	$pdf->SetFont('Arial', 'B', 16);
+	$pdf->Cell(40, 10, $printAdr);
+	$pdf->Cell(30, 20, $inhalt);
+	$pdf->Output();
 
 	$db->close();
 
