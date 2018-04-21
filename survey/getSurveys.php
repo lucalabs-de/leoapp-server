@@ -7,7 +7,7 @@
 	if ($db->connect_error)
 	  	die("-Connection failed: ".$db->connect_error);
 
-	$query = "SELECT title, description, recipient, multiple, owner, UNIX_TIMESTAMP(createdate) as createdate FROM Survey";
+	$query = "SELECT title, description, recipient, multiple, owner, UNIX_TIMESTAMP(createdate) as createdate FROM Survey ORDER BY createdate DESC";
 	$result = $db->query($query);
 
 	if ($result !== false) {
