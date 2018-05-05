@@ -57,6 +57,7 @@
 		$inhalt = str_replace("_ae_", "ä", $inhalt);
 		$inhalt = str_replace("_oe_", "ö", $inhalt);
 		$inhalt = str_replace("_ue_", "ü", $inhalt);
+		$inhalt = str_replace('\n', '\\\\\\\\', $inhalt);
 
 		$inhalt = str_replace("_Ae_", "Ä", $inhalt);
 		$inhalt = str_replace("_Oe_", "Ö", $inhalt);
@@ -74,18 +75,45 @@
 			echo $db->error;
 			die("-ERR db");
 		}
+		
+		if (preg_match("/[5-9]/", $adressat) === 1)
+			$printAdr .= "Klasse ";
+		
+		$printAdr .= $adressat.", ";
 
-		$printAdr .= $adressat." ";
+	}
 
-		echo "+OK";
+	echo "+OK ";
+
+	$name = '_cached_pdfs/MeldungSchwarzesBrett'.date("Y-m-d-H:i").'.pdf';
+
+	$files = glob('../_cached_pdfs');
+	foreach($files as $file){
+		if(is_file($file))
+			unlink($file);
 	}
 
 	$pdf = new FPDF();
 	$pdf->AddPage();
-	$pdf->SetFont('Arial', 'B', 16);
-	$pdf->Cell(40, 10, $printAdr);
-	$pdf->Cell(30, 20, $inhalt);
-	$pdf->Output();
+
+	$pdf->SetFont('Arial', 'BU', 25);
+	$pdf->Cell(40, 10, rtrim($printAdr, ', '));
+	$pdf->SetFont('Arial', '', 12);
+	$pdf->Cell(0, 10, date("d.m.Y"), 0, 0, 'R');
+	$pdf->Ln(15);
+
+	$pdf->SetFont('Arial', 'B', 18);
+	$pdf->MultiCell(0, 10, $titel);
+	$pdf->Ln(10);
+
+	$pdf->SetFont('Arial', '', 14);
+	$inhalt = str_replace('\\\\\\\\', "\n", $inhalt);
+	$inhalt = str_replace("\\", "", $inhalt);
+	$pdf->MultiCell(0, 8, $inhalt);
+
+	$pdf->Output('F', '../'.$name);
+
+	echo $name;
 
 	$db->close();
 

@@ -149,6 +149,7 @@
           $('#error').text("Eintrag erfolgreich hinzugefügt.");
           $('#error').css('color', 'green');
           $('.input').val('');
+          setTimeout(() => {window.location = data.split(' ')[1]}, 1000) //data[0] == "+OK"
         }
 
       });
