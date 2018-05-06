@@ -110,6 +110,10 @@
 	$inhalt = str_replace('\\\\\\\\', "\n", $inhalt);
 	$inhalt = str_replace("\\", "", $inhalt);
 	$pdf->MultiCell(0, 8, $inhalt);
+	
+	$pdf->Ln();
+	$pdf->SetFont('Arial', '', 12);
+	$pdf->Cell(0, 10, 'Relevant bis '.date("d.m.Y", strtotime($ablaufdatum)), 0, 0, 'R');
 
 	$pdf->Output('F', '../'.$name);
 
