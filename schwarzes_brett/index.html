@@ -5,6 +5,33 @@
   <title>Neue Mitteilung</title>
   <link href="_css/main.css" rel="stylesheet" type="text/css" />
   <link rel="icon" type="image/png" href="_media/ic_event_note_black_24dp_2x.png" />
+	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/latest/ui/minified/i18n/jquery-ui-i18n.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>  
+  <!-- Die ganzen Dependencies darf man sich echt nicht angucken -->    
+  <script> 
+    $(function() {
+      $('#datepicker').datepicker({
+       	prevText: '&#x3c;zurück', prevStatus: '',
+        prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
+        nextText: 'Vor&#x3e;', nextStatus: '',
+        nextJumpText: '&#x3e;&#x3e;', nextJumpStatus: '',
+        currentText: 'heute', currentStatus: '',
+        todayText: 'heute', todayStatus: '',
+        clearText: '-', clearStatus: '',
+        closeText: 'schließen', closeStatus: '',
+        monthNames: ['Januar','Februar','März','April','Mai','Juni',
+        'Juli','August','September','Oktober','November','Dezember'],
+        monthNamesShort: ['Jan','Feb','Mär','Apr','Mai','Jun',
+        'Jul','Aug','Sep','Okt','Nov','Dez'],
+        dayNames: ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
+        dayNamesShort: ['So','Mo','Di','Mi','Do','Fr','Sa'],
+        dayNamesMin: ['So','Mo','Di','Mi','Do','Fr','Sa'],
+      	dateFormat:'dd.mm.yy'
+      });
+    });
+  </script>
   <meta charset="utf-8" />
 </head>
 
@@ -44,24 +71,9 @@
       <div id="wrapper-addon">
 
 		  <legend><span class="number">4</span>ABLAUFDATUM<span class="required">*</span></legend>
-		  <p>
-		  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-            <script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
-            <script>
-            webshims.setOptions('forms-ext', {types: 'date'});
-            webshims.polyfill('forms forms-ext');
-            $.webshims.formcfg = {
-            en: {
-            dFormat: '-',
-            dateSigns: '-',
-            patterns: {
-            d: "yyyy-mm-dd"
-            }
-            }
-            };
-            </script>
-		  </p>
-        <input type="date" id="date" class="dateinput input" />
+		 
+
+        <input type="text" id="datepicker" class="dateinput input" />
 
         <legend class="fit-height"><span class="number">5</span>ANHANG</legend>
         <input type="file" id="addon" class="fileinput input" />
@@ -80,7 +92,6 @@
 
     <img src="_media/LeoAppGrau.svg" id="label-icon" />
   </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script>
 
     function submit() {
