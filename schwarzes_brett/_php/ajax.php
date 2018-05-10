@@ -68,7 +68,8 @@
 		if($titel==""||$inhalt==""||$ablaufdatum=="")
 			die("-ERR m");
 
-		$query = "INSERT INTO Eintraege VALUES (null, 0, '".$adressat."', '".$titel."', '".$inhalt."', '".$url."' , '".$heute."', '".$ablaufdatum."')";
+		$query = "INSERT INTO Eintraege VALUES (null, 0, '".$adressat."', '".$titel."', '".$inhalt."', '".$url."' , '".$heute."', '"
+		.date("Y-m-d", strtotime($ablaufdatum))."')";
 
 		$result = $db->query($query);
 		if ($result === false) {
