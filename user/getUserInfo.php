@@ -11,7 +11,7 @@
 
     //udefaultname, uklasse, upermission, ucreatedate
 
-    $query  = "SELECT udefaultname as d, uklasse as k, upermission as p, ucreatedate as c FROM Users WHRE uid=$id";
+    $query  = "SELECT udefaultname as d, uklasse as k, upermission as p, ucreatedate as c FROM Users WHERE uid=$id";
     $result = $db->query($query); 
 
     if($result === false)
