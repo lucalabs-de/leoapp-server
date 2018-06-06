@@ -11,7 +11,7 @@
 
     //udefaultname, uklasse, upermission, ucreatedate
 
-    $query  = "SELECT udefaultname as d, uklasse as k, upermission as p, ucreatedate as c FROM Users WHERE uid=$id";
+    $query  = "SELECT udefaultname as d, uklasse as k, upermission as p, ucreatedate as c, uname as n FROM Users WHERE uid=$id";
     $result = $db->query($query); 
 
     if($result === false)
@@ -19,6 +19,6 @@
 
     $assoc = $result->fetch_assoc();
 
-    echo $id."_;_".$assoc['d']."_;_".$assoc['k']."_;_".$assoc['p']."_;_".$assoc['c'];
+    echo $id."_;_".$assoc['d']."_;_".$assoc['k']."_;_".$assoc['p']."_;_".$assoc['c']."_;_".$assoc['n'];
 
 ?>
