@@ -7,9 +7,9 @@
 	if ($db->connect_error)
     	die("-connection failed: ".$db->connect_error);
 
-	// mitgegebene Werte über get: cname, cid
+	// mitgegebene Werte ï¿½ber get: cname, cid
 
-	$cname = $_GET['cname'];
+	$cname = $db->real_escape_string($_GET['cname']);
 	$cid = $_GET['cid'];
 
 	$query = "UPDATE Chats SET cname = '".$cname."' WHERE cid = ".$cid;

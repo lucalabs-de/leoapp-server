@@ -7,19 +7,19 @@
 	if ($db->connect_error)
     	die("-connection failed: ".$db->connect_error);
 
-	// mitgegebene Werte über get: userid, chatid
+	// mitgegebene Werte ï¿½ber get: userid, chatid
 	$uid = $db->real_escape_string($_GET['uid']);
 	$cid = $db->real_escape_string($_GET['cid']);
 	$message = $_GET['message'];
 	$vKey = $_GET['vKey'];
 	$key2 = "ABCD";
 
-	//assoziation wird überprüft
+	//assoziation wird ï¿½berprï¿½ft
 	if ($db->query("SELECT * FROM Assoziation WHERE cid = '".$chatid."' AND uid = '".$userid."'")->num_rows == 0)
 		die("-user no in this chat");
 	$date = date("Y-m-d H:i:s");
 
-	//nachricht wird entschlüsselt
+	//nachricht wird entschlï¿½sselt
 	for($i = 0; $i < strlen($message); $i++) {
 		$keyChar = ord($vKey[$i]) - (ord($key2[$i % strlen($key2)]) - 65);
 		if($keyChar < 65) {
