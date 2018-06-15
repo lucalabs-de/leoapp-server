@@ -1,11 +1,15 @@
 <?php
 
 	require_once('../../dbconfig.php');
+	require('../secure.php');
 
 	$db = new mysqli(dbhost, dbuser, dbpass, dbname);
 
 	if ($db->connect_error)
 		die("-ERR db");
+
+	if (!isSecure($_SERVER['AUTHENTICATION'], $db))
+		http_response_code(401);
 
 	$adressat = $_GET['to'];
 	
