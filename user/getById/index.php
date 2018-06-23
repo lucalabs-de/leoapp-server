@@ -9,21 +9,21 @@
         }
 
         protected function handleRequest() {
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $id = $db->real_escape_string($_GET['id']);
 
-            exitOnBadRequest($id);
+            parent::exitOnBadRequest($id);
 
             $query  = "SELECT udefaultname as d, uklasse as k, upermission as p, ucreatedate as c, uname as n FROM Users WHERE uid = $id";
             $result = $db->query($query); 
 
             if($result === false) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
 
             if ($result->num_rows == 0) {
-                returnApiError("No user with id $id", 404);
+                parent::returnApiError("No user with id $id", 404);
             }
 
             $assoc = $result->fetch_assoc();
@@ -37,7 +37,7 @@
                 "createdate" => $assoc['c']
             );
 
-            returnApiResponse($json);
+            parent::returnApiResponse($json);
 
             $db->close();
         }
