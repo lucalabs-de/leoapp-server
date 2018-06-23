@@ -2,8 +2,6 @@
 
     require_once('../../apiEndpoint.php');
 
-    new GetUserVotes();
-
     class GetUserVotes extends ApiEndpoint {
 
         protected function getMethod() {
@@ -12,17 +10,17 @@
 
         protected function handleRequest() {
 
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $user = $db->real_escape_string($_GET['id']);
 
-            exitOnBadRequest($user);
+            parent::exitOnBadRequest($user);
 
             $query = "SELECT answer as ans FROM Result WHERE user = $user";
             $result = $db->query($query);
 
             if($result === false) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
 
             $json = array();
@@ -33,11 +31,13 @@
 
             $json["voted_for"] = $votes;
 
-            returnApiResponse($json);
+            parent::returnApiResponse($json);
 
             $db->close();
         }
 
     }
+
+    new GetUserVotes();
 
 ?>

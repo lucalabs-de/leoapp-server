@@ -2,8 +2,6 @@
 
     require_once('../../apiEndpoint.php');
 
-    new RemoveSurvey();
-
     class RemoveSurvey extends ApiEndpoint {
 
         protected function getMethod() {
@@ -11,11 +9,11 @@
         }
 
         protected function handleRequest() {
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $survey = $db->real_escape_string($_GET['id']);
 
-            exitOnBadRequest($survey);
+            parent::exitOnBadRequest($survey);
 
             $query = "DELETE FROM Survey WHERE owner = $survey";
             $result = $db->query($query);
@@ -27,14 +25,16 @@
             $result3 = $db->query($query);
           
             if($result === false || $result2 === false || $result3 === false) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
           
-            returnApiSuccess();
+            parent::returnApiSuccess();
 
             $db->close();
         }
 
     }
+
+    new RemoveSurvey();
 
 ?>

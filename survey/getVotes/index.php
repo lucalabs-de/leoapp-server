@@ -2,8 +2,6 @@
 
     require_once('../../apiEndpoint.php');
 
-    new GetVotes();
-
     class GetVotes extends ApiEndpoint {
 
         protected function getMethod() {
@@ -11,12 +9,12 @@
         }
 
         protected function handleRequest() {
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $survey = $db->real_escape_string($_GET['survey']);
             $to = $db->real_escape_string($_GET['to']);
 
-            exitOnBadRequest($survey, $to);
+            parent::exitOnBadRequest($survey, $to);
 
             $query = "SELECT COUNT(r.user) as count, a.content as ans FROM Result r RIGHT JOIN Answers a ON a.id=r.answer WHERE a.survey = $survey GROUP BY ans ORDER BY count DESC";
             $result = $db->query($query);
@@ -45,7 +43,7 @@
             $result2 = $db->query($query);
 
             if($result === false || $result2 === false) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
 
             $json = array();
@@ -72,11 +70,13 @@
             $json = array("audience_size" => $result2->fetch_assoc()['c']);
             $json["answers"] = $answers;
 
-            returnApiResponse($json);
+            parent::returnApiResponse($json);
 
             $db->close();
         }
 
     }
+
+    new GetVotes();
 
 ?>

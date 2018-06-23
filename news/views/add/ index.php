@@ -2,8 +2,6 @@
 
     require_once('../../../apiEndpoint.php');
 
-    new AddViewInstance();
-
     class AddViewInstance extends ApiEndpoint {
 
         protected function getMethod() {
@@ -11,23 +9,25 @@
         }
 
         protected function handleRequest() {
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $id = $db->real_escape_string($_GET['id']);
 
-            exitOnBadRequest($id);
+            parent::exitOnBadRequest($id);
 
             $query = "UPDATE Eintraege SET Gelesen = Gelesen + 1 WHERE EintragID = $id";
             
             if ($db->query($query) !== true) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
 
-            returnApiSuccess();
+            parent::returnApiSuccess();
 
             $db->close();
         }
 
     }
+
+    new AddViewInstance();
 
 ?>

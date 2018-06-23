@@ -2,8 +2,6 @@
 
     require_once('../../apiEndpoint.php');
 
-    new GetEntries();
-
     class GetEntries extends ApiEndpoint {
 
         protected function getMethod() {
@@ -11,14 +9,14 @@
         }
 
         protected function handleRequest() {
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $date = date("Y-m-d");
 
             $query = "SELECT EintragID, Anhang, Gelesen, Titel, Adressat, Inhalt, UNIX_TIMESTAMP(Erstelldatum) as Erstell, UNIX_TIMESTAMP(Ablaufdatum) as Ablauf FROM Eintraege WHERE Ablaufdatum >= '$date' ORDER BY Erstell DESC";
             $result = $db->query($query);
             if ($result === false) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
 
             $json = array();
@@ -38,11 +36,13 @@
                 $json[] = $entry;
             }
             
-            returnApiResponse($json);
+            parent::returnApiResponse($json);
 
             $db->close();
         }
 
     }
+
+    new GetEntries();
 
 ?>

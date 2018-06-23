@@ -11,21 +11,21 @@
         }
 
         protected function handleRequest() {
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $user = $db->real_escape_string($_POST['user']);
             $answer = $db->real_escape_string($_POST['answer']);
 
-            exitOnBadRequest($user, $answer);
+            parent::exitOnBadRequest($user, $answer);
 
             $query = "INSERT INTO Result VALUES (null, $user, $answer)";
             $result = $db->query($query);
 
             if($result === false) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
 
-            returnApiSuccess();
+            parent::returnApiSuccess();
 
             $db->close();
         }

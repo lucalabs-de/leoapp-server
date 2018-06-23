@@ -1,6 +1,6 @@
 <?php
 
-require_once('dbconfig.php')
+require_once('dbconfig.php');
 
 abstract class ApiEndpoint {
 
@@ -8,15 +8,15 @@ abstract class ApiEndpoint {
 
         header('Content-Type: application/json');
 
-        if (strcmp(strtoupper(getMethod()), $_SERVER['REQUEST_METHOD']) !== 0) {
-            returnApiError("Method Not Allowed", 405); ///TODO add Allowed
+        if (strcmp(strtoupper($this->getMethod()), $_SERVER['REQUEST_METHOD']) !== 0) {
+            $this->returnApiError("Method Not Allowed", 405); ///TODO add Allowed
         } 
 
-        if (!isAuthorized()) {
-            returnApiError("Not Authorized", 401) ///TODO add WWW-Authenticate
+        if (!$this->isAuthorized()) {
+            $this->returnApiError("Not Authorized", 401); ///TODO add WWW-Authenticate
         }
 
-        handleRequest();
+        $this->handleRequest();
     }
 
     //Must return the desired HTTP Method as a string
@@ -27,7 +27,7 @@ abstract class ApiEndpoint {
         $db = new mysqli(dbhost, dbuser, dbpass, dbname);
 
         if ($db->connect_error) {
-            returnApiError("Internal Server Error", 500);
+            $this->returnApiError("Internal Server Error", 500);
         }
 
         return $db;
@@ -41,7 +41,7 @@ abstract class ApiEndpoint {
     protected function exitOnBadRequest(...$params) {
         foreach ($params as $p) {
             if (!isset($param)) {
-                returnApiError("Bad Request", 400);
+                $this->returnApiError("Bad Request", 400);
             }
         }
     }
@@ -65,7 +65,7 @@ abstract class ApiEndpoint {
         http_response_code(200);
         $json = array(
             "success" => true,
-            "data" = $response
+            "data" => $response
         );
         echo json_encode($json, JSON_PRETTY_PRINT);
     }

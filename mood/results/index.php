@@ -2,8 +2,6 @@
 
     require_once('../../apiEndpoint.php');
 
-    new GetMoodResults();
-
     class GetMoodResults extends ApiEndpoint {
 
         protected function getMethod() {
@@ -11,7 +9,7 @@
         }
 
         protected function handleRequest() {
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $uid = $db->real_escape_string($_GET['uid']);
             $filter = $_GET['filter'];
@@ -26,7 +24,7 @@
             foreach ($selection as $cur) {
                 switch($cur) {
                     case "own":
-                        exitOnBadRequest($uid);
+                    parent::exitOnBadRequest($uid);
                         $queryId = "SELECT DAY(vdate) as vday, MONTH(vdate) as vmonth, YEAR(vdate) as vyear, AVG(vid) as vvalue FROM Vote, Users WHERE Vote.uid = $uid GROUP BY vdate ORDER BY vdate DESC";
                         $arrayOwn = getArray($db->query($queryId));
                         $json["own"] = $arrayOwn;
@@ -44,14 +42,14 @@
                 }
             }
 
-            returnApiResponse($json);
+            parent::returnApiResponse($json);
 
             $db->close();
         }
 
         private function getArray($result) {
             if ($result === false) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
 
             $array = array();
@@ -67,5 +65,7 @@
         }
 
     }
+
+    new GetMoodResults();
 
 ?>

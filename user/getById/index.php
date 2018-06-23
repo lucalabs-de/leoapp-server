@@ -2,8 +2,6 @@
 
     require_once('../../apiEndpoint.php');
 
-    new GetUserInfo();
-
     class GetUserInfo extends ApiEndpoint {
 
         protected function getMethod() {
@@ -45,5 +43,7 @@
         }
 
     }
+
+    new GetUserInfo();
 
 ?>

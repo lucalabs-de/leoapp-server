@@ -2,8 +2,6 @@
 
     require_once('../../apiEndpoint.php');
 
-    new AddEntry();
-
     class AddEntry extends ApiEndpoint {
 
         protected function getMethod() {
@@ -11,7 +9,7 @@
         }
 
         protected function handleRequest() {
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $heute = date("Y-m-d H:i:s");
             $adressat = real_escape_string($_GET['to']);
@@ -19,20 +17,22 @@
             $inhalt = $db->real_escape_string($_GET['content']);
             $ablaufdatum = $db->real_escape_string($_GET['date']);
 
-            exitOnBadRequest($title, $inhalt, $ablaufdatum, $adressat);
+            parent::exitOnBadRequest($title, $inhalt, $ablaufdatum, $adressat);
 
             $query = "INSERT INTO Eintraege VALUES (null, 0, '".$adressat."', '".$titel."', '".$inhalt."', 'null', '".$heute."', '".$ablaufdatum."')";
             $result = $db->query($query);
             
             if ($result === false) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
 
-            returnApiSuccess();
+            parent::returnApiSuccess();
 
             $db->close();
         }
 
     }
+
+    new AddEntry();
 
 ?>

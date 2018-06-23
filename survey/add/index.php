@@ -2,8 +2,6 @@
 
     require_once('../../apiEndpoint.php');
 
-    new AddSurvey();
-
     class AddSurvey extends ApiEndpoint {
 
         protected function getMethod() {
@@ -11,7 +9,7 @@
         }
 
         protected function handleRequest() {
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $id = $db->real_escape_string($_POST['id']);
             $to = $db->real_escape_string($_POST['to']);
@@ -20,7 +18,7 @@
             $description = $db->real_escape_string($_POST['desc']);
             $multiple = $db->real_escape_string($_POST['mult']);
 
-            exitOnBadRequest($id, $to, $title, $answers, $description, $multiple);
+            parent::exitOnBadRequest($id, $to, $title, $answers, $description, $multiple);
 
             //REMOVE EXISTING SURVEY
 
@@ -59,7 +57,7 @@
             $result = $db->query($query);
 
             if ($result === false) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
 
             //INSERT ANSWERS
@@ -68,15 +66,17 @@
                 $query = "INSERT INTO Answers VALUES (null, ".$id.", '".$answer."')";
                 $result = $db->query($query);
                 if ($result === false) {
-                    returnApiError("Internal Server Error", 500);
+                    parent::returnApiError("Internal Server Error", 500);
                 }
             }
 
-            returnApiSuccess();
+            parent::returnApiSuccess();
 
             $db->close();
         }
 
     }
+
+    new AddSurvey();
 
 ?>

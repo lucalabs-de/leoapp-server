@@ -2,8 +2,6 @@
 
     require_once('../../apiEndpoint.php');
 
-    new GetSurveys();
-
     class GetSurveys extends ApiEndpoint {
 
         protected function getMethod() {
@@ -11,7 +9,7 @@
         }
 
         protected function handleRequest() {
-            $db = getConnection();
+            $db = parent::getConnection();
 
             $query = "SELECT title, description, recipient, multiple, owner, UNIX_TIMESTAMP(createdate) as createdate FROM Survey ORDER BY createdate DESC";
             $result = $db->query($query);
@@ -19,7 +17,7 @@
             $surveys = array();
 
             if ($result === false) {
-                returnApiError("Internal Server Error", 500);
+                parent::returnApiError("Internal Server Error", 500);
             }
 
             while ($row = $result->fetch_assoc()) {
@@ -32,7 +30,7 @@
                 $res = $db->query($query);
 
                 if($res === false) {
-                    returnApiError("Internal Server Error", 500);
+                    parent::returnApiError("Internal Server Error", 500);
                 }
 
                 $survey = array(
@@ -58,11 +56,13 @@
                 $surveys[] = $survey;
             }
 
-            returnApiResponse($surveys);
+            parent::returnApiResponse($surveys);
 
             $db->close();
         }
 
     }
+
+    new GetSurveys();
 
 ?>
