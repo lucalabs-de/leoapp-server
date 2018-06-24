@@ -30,6 +30,13 @@
 
             //REMOVE EXISTING SURVEY
 
+            $query = "SELECT uid FROM Users WHERE uid = $id";
+            $result = $db->query($query);
+
+            if ($result->num_rows == 0) {
+                parent::returnApiError("user $id does not exist", 404);
+            }
+
             $query = "DELETE FROM Survey WHERE owner = $id";
             $db->query($query);
 

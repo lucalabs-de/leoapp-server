@@ -11,14 +11,14 @@
         protected function handleRequest() {
             $db = parent::getConnection();
 
-            $uid = $_GET['id'];
+            $uid = $db->real_escape_string($_GET['id']);
             $date = date("Y-m-d");
 
             $query = "SELECT vid FROM Vote WHERE uid = $uid AND vdate = '$date'";
             $result = $db->query($query);
 
-            if($result->num_rows > 0) {
-                parent::returnApiError("No current vote for id $id", 404);
+            if($result->num_rows == 0) {
+                parent::returnApiError("No current vote for id $uid", 404);
             }
             
             parent::returnApiResponse(array("value" => $result->fetch_assoc()['vid']));
