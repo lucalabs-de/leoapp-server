@@ -33,6 +33,10 @@
             $query = "SELECT uid FROM Users WHERE uid = $id";
             $result = $db->query($query);
 
+            if ($result === false) {
+                parent::returnApiError("Internal Server Error", 500);
+            }
+
             if ($result->num_rows == 0) {
                 parent::returnApiError("user $id does not exist", 404);
             }
