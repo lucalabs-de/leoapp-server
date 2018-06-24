@@ -11,12 +11,12 @@
         protected function handleRequest() {
             $db = parent::getConnection();
 
-            $uid = $db->real_escape_string($_POST['uid']);
-            $uname = $db->real_escape_string($_POST['uname']);
+            $uid = $db->real_escape_string($_POST['id']);
+            $uname = $db->real_escape_string($_POST['name']);
 
             parent::exitOnBadRequest($uid, $uname);
 
-            if (preg_match($name, "/[a-zA-Z]{6}\d{6}/") === 1) {
+            if (preg_match("/^\\s*[a-zA-Z]{6}\\d{6}\\s*\$/", $uname) === 1) {
                 parent::returnApiError("username is not valid", 400);
             }
 
@@ -28,7 +28,7 @@
             }
 
             if ($result->num_rows > 0) {
-                parent::returnApiError("username already exists", 400)
+                parent::returnApiError("username already exists", 400);
             }
 
             $query = "UPDATE Users SET uname = '$uname' WHERE uid = $uid";

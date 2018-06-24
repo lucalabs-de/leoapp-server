@@ -26,7 +26,7 @@
             $json = array();
             $votes = array();
             while($row = $result->fetch_assoc()) {
-                $array[] = $row['ans'];
+                $votes[] = $row['ans'];
             }
 
             $json["voted_for"] = $votes;

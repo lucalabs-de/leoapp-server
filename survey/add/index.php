@@ -18,39 +18,23 @@
             $description = $db->real_escape_string($_POST['desc']);
             $multiple = $db->real_escape_string($_POST['mult']);
 
-            parent::exitOnBadRequest($id, $to, $title, $answers, $description, $multiple);
+            parent::exitOnBadRequest($id, $to, $title, $answers, $description);
+
+            if (empty($multiple) || strlen($multiple) === 0) {
+                $multiple = 0;
+            }
+
+            if (preg_match("/(^[5-9]\$)|(^EF\$)|(^Q[1-2]\$)|(^Sek I{1,2}\$)|(^Alle\$)/", $to) == 0) {
+                parent::returnApiError("$to is not a valid recipient", 400);    
+            }
 
             //REMOVE EXISTING SURVEY
 
-            $query = "DELETE FROM Survey WHERE owner = ".$id;
+            $query = "DELETE FROM Survey WHERE owner = $id";
             $db->query($query);
 
-            $query = "DELETE FROM Answers WHERE survey = ".$id;
+            $query = "DELETE FROM Answers WHERE survey = $id";
             $db->query($query);
-
-            //INSERT SURVEY DATA
-            switch($to) {
-                case 0:
-                    $to = "Alle";
-                break;
-                case 1:
-                    $to = "Sek I";
-                break;
-                case 2:
-                    $to = "Sek II";
-                break;
-                case 8:
-                    $to = "EF";
-                break;
-                case 9:
-                    $to = "Q1";
-                break;
-                case 10:
-                    $to = "Q2";
-                break;
-                default:
-                    $to += 2;
-            }
 
             $query = "INSERT INTO Survey VALUES ($id, '$title', '$description', '$to', '$multiple', '".date("Y-m-d H:i:s")."')";
 
@@ -62,7 +46,7 @@
 
             //INSERT ANSWERS
 
-            foreach (explode("_;_", $answers) as $answer) {
+            foreach (explode("|", $answers) as $answer) {
                 $query = "INSERT INTO Answers VALUES (null, ".$id.", '".$answer."')";
                 $result = $db->query($query);
                 if ($result === false) {

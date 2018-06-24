@@ -40,7 +40,7 @@ abstract class ApiEndpoint {
 
     protected function exitOnBadRequest(...$params) {
         foreach ($params as $p) {
-            if (!isset($p)) {
+            if (empty($p) || strlen($p) === 0) {
                 $this->returnApiError("Bad Request", 400);
             }
         }
@@ -75,7 +75,7 @@ abstract class ApiEndpoint {
         $json = array(
             "success" => true
         );
-
+        echo json_encode($json, JSON_PRETTY_PRINT);
     }
 
 }

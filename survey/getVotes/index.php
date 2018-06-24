@@ -12,11 +12,19 @@
             $db = parent::getConnection();
 
             $survey = $db->real_escape_string($_GET['survey']);
-            $to = $db->real_escape_string($_GET['to']);
 
-            parent::exitOnBadRequest($survey, $to);
+            parent::exitOnBadRequest($survey);
 
-            $query = "SELECT COUNT(r.user) as count, a.content as ans FROM Result r RIGHT JOIN Answers a ON a.id=r.answer WHERE a.survey = $survey GROUP BY ans ORDER BY count DESC";
+            $query = "SELECT recipient FROM Survey WHERE owner = $survey";
+            $result = $db->query($query);
+
+            if ($result === false) {
+                parent::returnApiError("Internal Server Error", 500);
+            }
+
+            $to = $result->fetch_assoc()['recipient'];
+
+            $query = "SELECT COUNT(r.user) as count, a.content as ans FROM Result r RIGHT JOIN Answers a ON a.id = r.answer WHERE a.survey = $survey GROUP BY ans ORDER BY count DESC";
             $result = $db->query($query);
 
             switch ($to) {
@@ -66,8 +74,8 @@
             $result4 = $db->query($query);
             $array = $result4->fetch_assoc();
 
+            $json["audience_size"] = $result2->fetch_assoc()['c'];
             $json["registered_votes"] = $array['count'];
-            $json = array("audience_size" => $result2->fetch_assoc()['c']);
             $json["answers"] = $answers;
 
             parent::returnApiResponse($json);

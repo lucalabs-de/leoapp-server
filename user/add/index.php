@@ -19,11 +19,7 @@
 
             parent::exitOnBadRequest($checksum, $name);
 
-            if (preg_match($name, "/[a-zA-Z]{6}\d{6}/") === 1) {
-                parent::returnApiError("username is not valid", 400);
-            }
-
-            if (strcmp(getChecksumFromName($name), $checksum) !== 0) {
+            if (strcmp($this->getChecksumFromName($name), $checksum) !== 0) {
                 parent::returnApiError("checksum does not match username", 400);
             }
 
@@ -67,6 +63,7 @@
                     $hex = $hex . $name[6 + $i];
                 }
             }
+
             return $hex;
         }
 

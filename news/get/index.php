@@ -15,6 +15,7 @@
 
             $query = "SELECT EintragID, Anhang, Gelesen, Titel, Adressat, Inhalt, UNIX_TIMESTAMP(Erstelldatum) as Erstell, UNIX_TIMESTAMP(Ablaufdatum) as Ablauf FROM Eintraege WHERE Ablaufdatum >= '$date' ORDER BY Erstell DESC";
             $result = $db->query($query);
+
             if ($result === false) {
                 parent::returnApiError("Internal Server Error", 500);
             }

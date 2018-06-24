@@ -13,7 +13,7 @@
 
             $name = $db->real_escape_string($_GET['name']);
 
-            parent::exitOnBadRequest($name)
+            parent::exitOnBadRequest($name);
 
             $query = "SELECT uid, uklasse as k, upermission as p, ucreatedate as c, uname as n, udefaultname as d FROM Users WHERE udefaultname = '$name' OR uname = '$name'";
             $result = $db->query($query);

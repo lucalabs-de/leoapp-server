@@ -5,7 +5,7 @@
     class RemoveSurvey extends ApiEndpoint {
 
         protected function getMethod() {
-            return "DELETE"; //TODO add htaccess to redirect remove/{id} to remove/index.php?id={id}
+            return "DELETE"; //TODO add htaccess to redirect remove/{id} to remove/index.php?id={id} and change method to delete
         }
 
         protected function handleRequest() {

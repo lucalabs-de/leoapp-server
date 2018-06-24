@@ -16,7 +16,7 @@
             parent::exitOnBadRequest($id);
 
             $query = "SELECT Gelesen FROM Eintraege WHERE EintragID = $id";
-            $result = $db->query($query)
+            $result = $db->query($query);
 
             if ($result === false) {
                 parent::returnApiError("Internal Server Error", 500);

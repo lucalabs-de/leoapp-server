@@ -15,7 +15,7 @@
 
             parent::exitOnBadRequest($id);
 
-            $sql = "DELETE FROM Eintraege WHERE EintragID=".$id;
+            $sql = "DELETE FROM Eintraege WHERE EintragID = $id";
 
             $result = $db->query($sql);
 

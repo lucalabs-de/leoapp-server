@@ -11,7 +11,7 @@
         protected function handleRequest() {
             $db = parent::getConnection();
 
-            $id = $db->real_escape_string($_GET['id']);
+            $id = $db->real_escape_string($_POST['id']);
 
             parent::exitOnBadRequest($id);
 

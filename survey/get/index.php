@@ -43,16 +43,16 @@
                     "createdate" => $row['createdate']
                 );
 
-                $answers = array();
+                $answersArray = array();
                 while ($ansArray = $answers->fetch_assoc()) {
                     $answer = array(
                         "id" => $ansArray['id'],
                         "content" => $ansArray['content']
                     );
-                    $answers[] = $answer;
+                    $answersArray[] = $answer;
                 }
 
-                $survey["answers"] = $answers;
+                $survey["answers"] = $answersArray;
                 $surveys[] = $survey;
             }
 
