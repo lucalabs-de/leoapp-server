@@ -180,6 +180,7 @@ Adds a new survey to the database. The following POST data is required:
     + title - The surveys title.
     + desc - The surveys description.
     + multiple (int) - Can you vote for multiple answers (1) or not (0)?
+    + recipient (string) - The recipient of the survey, valid recipients are 5-9, "EF", "Q1", "Q2", "Sek I", "Sek II" and "Alle"
     + answers (array[string]) - Array of possible answers (maximum 5)
 
 + Request (application/json) 
@@ -187,6 +188,7 @@ Adds a new survey to the database. The following POST data is required:
         "id": 1007,
         "title": "Survey title",
         "desc": "Survey description",
+        "recipient": "Q2"
         "multiple": 1,
         "answers": [
             "answer 1",
@@ -288,7 +290,7 @@ The request does not fail and is ignored if you try to vote for the same answer 
 
 ## Deleting surveys [survey/remove/{id}]
 ### Delete a survey by its id [DELETE]
-Deletes a survey 
+Deletes a survey.
 
 + Parameters
     + id - survey id
@@ -303,18 +305,128 @@ Deletes a survey
 
 ## Adding entries [news/add]
 ### Add a new entry to the school news board [POST]
+This action allows you to add a new entry to the in-app news board. The following POST data is required:
+    + title - The entry title.
+    + content - The entry content.
+    + recipient (string) - The recipient of the survey, valid recipients are 5-9, "EF", "Q1", "Q2", "Sek I", "Sek II" and "Alle".
+    + date - date until the entry is valid and shown in the app.
+
++ Request (application/json)
+    {
+        "title": "Entry title",
+        "content": "Entry content",
+        "recipient": "Alle",
+        "date": "2018-06-30"
+    }
+
++ Response 200 (application/json) 
+    + Body 
+        {
+            "success": true
+        }
 
 ## Getting entries [news/get]
 ### Get a list of all current entries (not yet expired) [GET]
+Gets a list of all current entries with detailed information. Same entries with different recipients are their own objects for easier management.
+
++ Response 200 (application/json)
+    + Body
+        {
+            "success": true,
+            "data": [
+                {
+                    "id": "214",
+                    "title": "entrytitle",
+                    "content": "content",
+                    "recipient": "8",
+                    "view_counter": "1",
+                    "attachment": "null",
+                    "valid_until": "1525989600"
+                },
+                {
+                    "id": "215",
+                    "title": "entrytitle",
+                    "content": "content",
+                    "recipient": "9",
+                    "view_counter": "0",
+                    "attachment": "null",
+                    "valid_until": "1525989600"
+                },
+                {
+                    "id": "216",
+                    "title": "entrytitle",
+                    "content": "content",
+                    "recipient": "EF",
+                    "view_counter": "0",
+                    "attachment": "null",
+                    "valid_until": "1525989600"
+                },
+                {
+                    "id": "217",
+                    "title": "entrytitle",
+                    "content": "content",
+                    "recipient": "Q1",
+                    "view_counter": "0",
+                    "attachment": "null",
+                    "valid_until": "1525989600"
+                },
+                {
+                    "id": "218",
+                    "title": "entrytitle",
+                    "content": "content",
+                    "recipient": "Q2",
+                    "view_counter": "0",
+                    "attachment": "null",
+                    "valid_until": "1525989600"
+                }
+            ]
+        }
+    
+    The attachment field - if not null - contains an url to the corresponding resource.
 
 ## Deleting entries [entry/remove/{id}]
 ### Delete an entrie by its id [DELETE]
+Deletes an entry.
+
++ Parameters
+    + id - entry id
+
++ Response 200 (application/json)
+    + Body
+        {
+            "success": true
+        }
 
 ## Get view count [news/views/get/{id}]
 ### Get the view count (amount of students who read the entry) [GET]
+Get the view count for an entry.
+
++ Parameters
+    + id - entry id
+
++ Response 200 (application/json)
+    + Body
+        {
+            "success": true,
+            "data": {
+                "views": "1"
+            }
+        }
 
 ## Increment view count [news/views/add]
 ### Increment the view count of entry {id} by 1 [POST]
+Increment the view count by one.
+
++ Request (application/json)
+    {
+        "id": 214
+    }
+
++ Response 200 (application/json)
+    + Body
+        {
+            "success": true
+        }
 
 # Group mood
 

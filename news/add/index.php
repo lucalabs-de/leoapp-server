@@ -12,7 +12,7 @@
             $db = parent::getConnection();
 
             $heute = date("Y-m-d H:i:s");
-            $adressat = $db->real_escape_string($_POST['to']);
+            $adressat = $db->real_escape_string($_POST['recipient']);
             $titel = $db->real_escape_string($_POST['title']);
             $inhalt = $db->real_escape_string($_POST['content']);
             $ablaufdatum = $db->real_escape_string($_POST['date']);
