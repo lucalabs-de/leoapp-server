@@ -12,7 +12,7 @@
 
             $db = parent::getConnection();
 
-            $user = $db->real_escape_string($_GET['id']);
+            $user = $db->real_escape_string($_GET['p0']);
 
             parent::exitOnBadRequest($user);
 

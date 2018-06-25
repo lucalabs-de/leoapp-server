@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteRule    ^user/get/(\d*)/?$                       user/getById/index.php?p0=$1    [NC,L] #special rule for getting users by id
+RewriteRule    ^user/get/(.*)/?$                        user/getByName/index.php?p0=$1  [NC,L] #special rule for getting users by name
+RewriteRule    ^([\w-]+)/([\w-]+)/([\w-]+)/([\w-]*)/?$  $1/$2/$3/index.php?p0=$4        [NC,L] #single argument, one folder down
+RewriteRule    ^([\w-]+)/([\w-]+)/?$                    $1/$2/index.php                 [NC,L] #If no rule applies just move to index.php to preserve http method
+RewriteRule    ^([\w-]+)/([\w-]+)/([\w-]*)/?$           $1/$2/index.php?p0=$3           [NC,L] #single argument

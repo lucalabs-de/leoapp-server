@@ -11,7 +11,7 @@
         protected function handleRequest() {
             $db = parent::getConnection();
 
-            $uid = $db->real_escape_string($_GET['id']);
+            $uid = $db->real_escape_string($_GET['p0']);
             $date = date("Y-m-d");
 
             $query = "SELECT vid FROM Vote WHERE uid = $uid AND vdate = '$date'";

@@ -11,7 +11,7 @@
         protected function handleRequest() {
             $db = parent::getConnection();
 
-            $survey = $db->real_escape_string($_GET['survey']);
+            $survey = $db->real_escape_string($_GET['p0']);
 
             parent::exitOnBadRequest($survey);
 
