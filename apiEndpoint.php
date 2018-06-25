@@ -8,7 +8,9 @@ abstract class ApiEndpoint {
 
         header('Content-Type: application/json');
 
-        if (strcmp(strtoupper($this->getMethod()), $_SERVER['REQUEST_METHOD']) !== 0) {
+        $method = $_SERVER['REQUEST_METHOD'];
+
+        if (strcmp(strtoupper($this->getMethod()), $method) !== 0) {
             $this->returnApiError("Method Not Allowed", 405); ///TODO add Allowed
         } 
 
@@ -16,6 +18,9 @@ abstract class ApiEndpoint {
             $this->returnApiError("Not Authorized", 401); ///TODO add WWW-Authenticate
         }
 
+        if (strcmp($method, "POST") === 0) {
+            $_POST = json_decode(file_get_contents('php://input'), true);
+        }
         $this->handleRequest();
     }
 

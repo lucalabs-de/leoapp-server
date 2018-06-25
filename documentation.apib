@@ -1,0 +1,344 @@
+FORMAT: 1A
+HOST: https://ucloud4schools.de/ext/slg/
+
+# LeoApp REST API
+This API provides a RESTful way to interact with the LeoApp database and thus improves on the old system. Currently supported features are user related interactions,
+news and (mood-)surveys.
+
+## Authentication
+To successfully use the API, you must include the authentication header in your HTTP-requests. The value is based on the verification checksum of a specific user and
+has to be calculated each time prior to usage (see [GitHub](https://github.com/Leo-App/android/blob/5aa08afd84f5113b929aab7e299766203459244c/app/src/main/java/de/slgdev/leoapp/utility/Utils.java#L392-L414)).
+
+## Errors
+Errors follow the syntax
+
+```json
+{
+    "success": false,
+    "error": {
+        "code": 400,
+        "message": "some error"
+    }
+}
+```
+
+The error codes correspond to the HTTP status codes.
+
+# Group User
+## Adding users [user/add]
+### Add a new user [POST]
+You may add a new user with this action. It takes a JSON Object containing the users login name and the checksum returned by the secureaccess verification.
+
++ checksum (string) - The checksum
++ name (string) - The default username
+
++ Request (application/json)
+    {
+        "name": "giaspi270700"
+        "checksum": "5bcf93bfb6ead57ea492a8a9a5182f57f9bbf965ff1b92e861d51db933d41cf4"
+    }
+
++ Response 200 (application/json)
+    + Body 
+        {
+            "success":true
+        }
+
+## Getting users [user/get/{identifier}]
+### Get a user by identifier [GET]
+This allows you to get detailed information about a user.
+
++ Parameters
+    + identifier - Unique identifier for the user, may be his id or his username
+
++ Response 200 (application/json)    
+    + Body
+        {
+            "success": true,
+            "data": {
+                "id": "1007",
+                "name": "lucalabs",
+                "defaultname": "giaspi270700",
+                "grade": "Q2",
+                "permission": "3",
+                "createdate": "2017-05-31"
+            }
+        }
+    
+    - id: Unique user-id
+    - name: Changeable, unique username
+    - defaultname: Default username used in verification process
+    - grade: Valid grades are 5-9, EF, Q1, Q2 and TEA
+    - permission: User permission level: 1 - student, 2 - teacher, 3 - admin
+    - createdate: date of first verification
+
+## Updating Grade [user/updateGrade]
+### Update the grade of a specific user [POST]
+You can change the grade of a specific user with this action. It takes a JSON Object with the user id and the new desired grade. Once again, valid grade strings
+are 5-9, "EF", "Q1", "Q2" and "TEA".
+
++ Request (application/json)
+    {
+        "id": 1007
+        "grade": "TEA"
+    }
+
++ Response 200 (application/json)
+    + Body 
+        {
+            "success": true
+        }
+
+## Updating Name [user/updateName]
+### Update the name of a user [POST]
+With this action you can change the name of a user. It takes a JSON Object with the user id and the new desired name. Once again, valid grade strings
+are 5-9, "EF", "Q1", "Q2" and "TEA". This request may fail if the new username is already taken or is a "defaultname" matching ^[a-z]{6}(\d{6}|$)$ .
+
++ Request (application/json)
+    {
+        "id": 1007
+        "name": "lucalabs-de"
+    }
+
++ Response 200 (application/json)
+    + Body 
+        {
+            "success":true
+        }
+
+# Group survey
+## Getting surveys [survey/get]
+### Receive a list of surveys [GET]
+You can get a list of currently active surveys by calling this endpoint.  
+
++ Response 200 (application/json)
+    + Body 
+        {
+            "success": true,
+            "data": [
+                {
+                    "id": "1018",
+                    "author": "Lord Bratwurst",
+                    "title": "Essen",
+                    "description": "Wohin?",
+                    "recipient": "Q2",
+                    "multiple": "1",
+                    "createdate": "1516372083",
+                    "answers": [
+                        {
+                            "id": "1086",
+                            "content": "Thail\u00e4ndisch"
+                        },
+                        {
+                            "id": "1087",
+                            "content": "italienisch"
+                        },
+                        {
+                            "id": "1088",
+                            "content": "griechisch "
+                        },
+                        {
+                            "id": "1089",
+                            "content": "Steakhaus "
+                        }
+                    ]
+                },
+                {
+                    "id": "1014",
+                    "author": "user 1",
+                    "title": "Motorrad fahren?",
+                    "description": "Soll ich?",
+                    "recipient": "Q2",
+                    "multiple": "0",
+                    "createdate": "1516305596",
+                    "answers": [
+                        {
+                            "id": "1075",
+                            "content": "ja"
+                        },
+                        {
+                            "id": "1076",
+                            "content": "ja "
+                        },
+                        {
+                            "id": "1077",
+                            "content": "auf jeden fall"
+                        },
+                        {
+                            "id": "1078",
+                            "content": "bestes"
+                        }
+                    ]
+                }
+            ]
+        }
+
+## Adding surveys [survey/add]
+### Add a new survey to the database [POST]
+
+## Get votes for user [survey/userVotes/{id}]
+### Get a list of all answer ids a specific user voted for [GET]
+
+## Get votes for survey [survey/votes/{id}]
+### Get information about the results of a survey [GET]
+
+## Vote for survey
+### Register a new uservote for a survey [POST]
+Allows you to register a new vote for a specific answer id as a certain user. This request may fail if:
+    - A: The user has already voted on the same survey and multiple answers are not supported
+    - B: The answer id does not exist
+
+The request does not fail and is ignored if you try to vote for the same answer twice.
+
+## Deleting surveys [survey/remove/{id}]
+### Delete a survey by its id [DELETE]
+
+# Group entry
+
+## Adding entries [news/add]
+### Add a new entry to the school news board [POST]
+
+## Getting entries [news/get]
+### Get a list of all current entries (not yet expired) [GET]
+
+## Deleting entries [entry/remove/{id}]
+### Delete an entrie by its id [DELETE]
+
+## Get view count [news/views/get/{id}]
+### Get the view count (amount of students who read the entry) [GET]
+
+## Increment view count [news/views/add]
+### Increment the view count of entry {id} by 1 [POST]
+
+# Group mood
+
+## Get current user vote [mood/currentVote/{id}]
+### Get the "mood"-vote of a specific user for the current day [GET]
+
+
+## Get all "mood"-votes [mood/results?id={id}&filter={filter}]
+### Get a categorized list of mood votes averaged per day [GET]
+Returns a list of all past mood-votes categorized into three "teacher", "student" and "own". For the last category it is necessary to supply a user id. Furthermore,
+you have to possibility to add a filter.
+
++ Parameters
+    + id - user id
+    + filter - the categories you want to retrieve, separated by the pipe character '|', if none are supplied, all categories are returned
+
++ Response 200 (application/json)
+    + Body
+        {
+            "success": true,
+            "data": {
+                "student": [
+                    {
+                        "value": "5.0000",
+                        "date": "24.6.2018"
+                    },
+                    {
+                        "value": "2.5000",
+                        "date": "23.12.2017"
+                    },
+                    {
+                        "value": "1.5000",
+                        "date": "22.12.2017"
+                    },
+                    {
+                        "value": "2.5000",
+                        "date": "21.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "20.12.2017"
+                    },
+                    {
+                        "value": "1.5000",
+                        "date": "19.12.2017"
+                    },
+                    {
+                        "value": "2.4000",
+                        "date": "18.12.2017"
+                    },
+                    {
+                        "value": "2.5000",
+                        "date": "17.12.2017"
+                    },
+                    {
+                        "value": "2.5000",
+                        "date": "16.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "15.12.2017"
+                    }
+                ],
+                "teacher": [
+                    {
+                        "value": "2.0000",
+                        "date": "23.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "22.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "21.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "20.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "18.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "17.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "15.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "14.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "13.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "11.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "10.12.2017"
+                    }
+                ]
+            }
+        }
+
+
+## Vote for mood-survey [mood/vote]
+### Register a new mood-vote [POST]
+Allows you to register a new mood-vote for a certain user. This request may fail if:
+    - A: The user id does not exist
+    - B: The vote id is not between 1 and 5
+
+Contrary to the regular surveys, if you try to register multiple votes per user per day, the vote is updated.
+
++ Request (application/json)
+    {
+        "id": 1007,
+        "vote_id": 5
+    }
+
++ Response 200 (application/json)
+    + Body 
+        {
+            "success": true
+        }
+

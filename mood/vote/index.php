@@ -11,8 +11,8 @@
         protected function handleRequest() {
             $db = parent::getConnection();
 
-            $uid = $db->real_escape_string($_POST['uid']);
-            $vid = $db->real_escape_string($_POST['vid']); //1-5
+            $uid = $db->real_escape_string($_POST['id']);
+            $vid = $db->real_escape_string($_POST['vote_id']); //1-5
             $grund = $db->real_escape_string($_POST['grund']); //reason optional and currently unused
             $date = date("Y-m-d");
 
@@ -33,7 +33,7 @@
                 parent::returnApiError("user $uid does not exist", 404);
             }
 
-            $query = "INSERT INTO Vote VALUES ($vid, $uid, '$date', '$grund') ON DUPLICATE KEY UPDATE vid=$vid";
+            $query = "INSERT INTO Vote VALUES ($vid, $uid, '$date', '$grund') ON DUPLICATE KEY UPDATE vid = $vid";
             $result = $db->query($query);
             
             if ($result === false) {
