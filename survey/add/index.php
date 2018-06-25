@@ -12,9 +12,9 @@
             $db = parent::getConnection();
 
             $id = $db->real_escape_string($_POST['id']);
-            $to = $db->real_escape_string($_POST['to']);
+            $to = $db->real_escape_string($_POST['recipient']);
             $title = $db->real_escape_string($_POST['title']);
-            $answers = $db->real_escape_string($_POST['answers']);
+            $answers = $db->real_escape_string($_POST['answers']); //TODO update answers to JSON format see documentation
             $description = $db->real_escape_string($_POST['desc']);
             $multiple = $db->real_escape_string($_POST['mult']);
 

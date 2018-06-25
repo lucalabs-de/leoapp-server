@@ -175,14 +175,98 @@ You can get a list of currently active surveys by calling this endpoint.
 
 ## Adding surveys [survey/add]
 ### Add a new survey to the database [POST]
+Adds a new survey to the database. The following POST data is required:
+    + id - The userid of the author.
+    + title - The surveys title.
+    + desc - The surveys description.
+    + multiple (int) - Can you vote for multiple answers (1) or not (0)?
+    + answers (array[string]) - Array of possible answers (maximum 5)
+
++ Request (application/json) 
+    {
+        "id": 1007,
+        "title": "Survey title",
+        "desc": "Survey description",
+        "multiple": 1,
+        "answers": [
+            "answer 1",
+            "answer 2",
+            "answer 3"
+        ]
+    }
+
++ Response 200 (application/json)
+    + Body 
+        {
+            "success":true
+        }
+
 
 ## Get votes for user [survey/userVotes/{id}]
-### Get a list of all answer ids a specific user voted for [GET]
+### Get a list of all answers a specific user voted for [GET]
+Returns a list of the ids of all answers the user {id} has voted for. If the user has not voted yet or the user does not exist, the array is empty.
+
++ Parameters
+    + id - User id
+
++ Response 200 (application/json)
+    + Body
+        {
+            "success": true,
+            "data": {
+                "voted_for": [
+                    "1064",
+                    "1063",
+                    "1054",
+                    "1052",
+                    "1065",
+                    "1066",
+                    "1075",
+                    "1077",
+                    "1073",
+                    "1072",
+                    "1077",
+                    "1077",
+                    "1073"
+                ]
+            }
+        }
 
 ## Get votes for survey [survey/votes/{id}]
 ### Get information about the results of a survey [GET]
+Returns detailed voting information about a given survey which contains inter alia the audience size and the total amount of users that have already voted.
 
-## Vote for survey
++ Parameters
+    + id - survey id
+
++ Response 200 (application/json)
+    + Body
+        {
+            "success": true,
+            "data": {
+                "title": "test",
+                "audience_size": "12",
+                "registered_votes": "1",
+                "answers": [
+                    {
+                        "id": "answer 1",
+                        "votes": "1"
+                    },
+                    {
+                        "id": "sndjasd",
+                        "votes": "1"
+                    },
+                    {
+                        "id": "answer2",
+                        "votes": "0"
+                    }
+                ]
+            }
+        }
+
+
+
+## Vote for survey [survey/vote]
 ### Register a new uservote for a survey [POST]
 Allows you to register a new vote for a specific answer id as a certain user. This request may fail if:
     - A: The user has already voted on the same survey and multiple answers are not supported
@@ -190,8 +274,30 @@ Allows you to register a new vote for a specific answer id as a certain user. Th
 
 The request does not fail and is ignored if you try to vote for the same answer twice.
 
++ Request (application/json)
+    {
+        "user": 1007,
+        "answer": 1066
+    }
+
++ Response 200 (application/json)
+    + Body
+        {
+            "success": true
+        }
+
 ## Deleting surveys [survey/remove/{id}]
 ### Delete a survey by its id [DELETE]
+Deletes a survey 
+
++ Parameters
+    + id - survey id
+
++ Response 200 (application/json)
+    + Body
+        {
+            "success": true
+        }
 
 # Group entry
 
@@ -214,7 +320,20 @@ The request does not fail and is ignored if you try to vote for the same answer 
 
 ## Get current user vote [mood/currentVote/{id}]
 ### Get the "mood"-vote of a specific user for the current day [GET]
+With this action you can check the last mood-vote for a specified user. 
+This request may fail if the user has not voted for the current day or the user id does not exist.
 
++ Parameters
+    + id - user id
+
++ Response 200 (application/json)
+    + Body
+        {
+            "success": true,
+            "data": {
+                "value": "5"
+            }
+        }
 
 ## Get all "mood"-votes [mood/results?id={id}&filter={filter}]
 ### Get a categorized list of mood votes averaged per day [GET]
