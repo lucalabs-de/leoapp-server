@@ -58,3 +58,8 @@ freeline_project_description.json
 # Sensible Information
 secure.php
 testAuth.php
+verify.php
+
+# Created API Documentation
+*.ico
+api-documentation.html

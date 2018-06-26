@@ -8,7 +8,7 @@ news and (mood-)surveys.
 
 ## Authentication
 
-To successfully use the API, you must include the authentication header in your HTTP-requests. The value is based on the verification checksum of a specific user and
+To successfully use the API, you must include the **authentication header** in your HTTP-requests. The value is based on the verification checksum of a specific user and
 has to be calculated each time prior to usage (see [GitHub](https://github.com/Leo-App/android/blob/5aa08afd84f5113b929aab7e299766203459244c/app/src/main/java/de/slgdev/leoapp/utility/Utils.java#L392-L414)).
 
 ## Errors
@@ -101,7 +101,7 @@ are 5-9, "EF", "Q1", "Q2" and "TEA".
 ## Updating Name [/user/updateName]
 ### Update the name of a user [POST]
 With this action you can change the name of a user. It takes a JSON Object with the user id and the new desired name. Once again, valid grade strings
-are 5-9, "EF", "Q1", "Q2" and "TEA". This request may fail if the new username is already taken or is a "defaultname" matching ^[a-z]{6}(\d{6}|$)$ .
+are 5-9, "EF", "Q1", "Q2" and "TEA". This request may fail if the new username is already taken or is a "defaultname" matching `^[a-z]{6}(\d{6}|$)$` .
 
 + Request (application/json)
     
@@ -119,7 +119,7 @@ are 5-9, "EF", "Q1", "Q2" and "TEA". This request may fail if the new username i
 # Group survey
 ## Getting surveys [/survey/get]
 ### Receive a list of surveys [GET]
-You can get a list of currently active surveys by calling this endpoint.  
+You can get a list of currently active surveys by calling this endpoint. The response contains all relevant information about the surveys, as well as about its answers.
 
 + Response 200 (application/json)
      
@@ -188,7 +188,7 @@ You can get a list of currently active surveys by calling this endpoint.
 Returns a list of the ids of all answers the user {id} has voted for. If the user has not voted yet or the user does not exist, the array is empty.
 
 + Parameters
-    + id - User id
+    + id (number) - User id
 
 + Response 200 (application/json)
     
@@ -218,7 +218,7 @@ Returns a list of the ids of all answers the user {id} has voted for. If the use
 Returns detailed voting information about a given survey which contains inter alia the audience size and the total amount of users that have already voted.
 
 + Parameters
-    + id - survey id
+    + id (number) - The survey id you want to get vote information for.
 
 + Response 200 (application/json)
     
@@ -253,9 +253,9 @@ The following POST data is required:
 - id - The userid of the author.
 - title - The surveys title.
 - desc - The surveys description.
-- multiple (int) - Can you vote for multiple answers (1) or not (0)?
-- recipient (string) - The recipient of the survey, valid recipients are 5-9, "EF", "Q1", "Q2", "Sek I", "Sek II" and "Alle"
-- answers (array[string]) - Array of possible answers (maximum 5)
+- multiple - Can you vote for multiple answers (1) or not (0)?
+- recipient  - The recipient of the survey, valid recipients are 5-9, "EF", "Q1", "Q2", "Sek I", "Sek II" and "Alle"
+- answers - Array of possible answers (maximum 5)
 
 + Request (application/json) 
 
@@ -281,8 +281,8 @@ The following POST data is required:
 ## Vote for survey [/survey/vote]
 ### Register a new uservote for a survey [POST]
 Allows you to register a new vote for a specific answer id as a certain user. This request may fail if:
-    - A: The user has already voted on the same survey and multiple answers are not supported
-    - B: The answer id does not exist
+- A: The user has already voted on the same survey and multiple answers are not supported
+- B: The answer id does not exist
 
 The request does not fail and is ignored if you try to vote for the same answer twice.
 
@@ -304,7 +304,7 @@ The request does not fail and is ignored if you try to vote for the same answer 
 Deletes a survey.
 
 + Parameters
-    + id - survey id
+    + id (number) - The survey id you want to delete.
 
 + Response 200 (application/json)
     
@@ -312,7 +312,7 @@ Deletes a survey.
             "success": true
         }
 
-# Group entry
+# Group news
 
 ## Getting entries [/news/get]
 ### Get a list of all current entries (not yet expired) [GET]
@@ -378,7 +378,7 @@ Gets a list of all current entries with detailed information. Same entries with 
 Get the view count for an entry.
 
 + Parameters
-    + id - entry id
+    + id (number) - The entry id
 
 + Response 200 (application/json)
     
@@ -394,10 +394,10 @@ Get the view count for an entry.
 This action allows you to add a new entry to the in-app news board. 
 
 The following POST data is required:
-- title (string)        - The entry title.
-- content (string)      - The entry content.
-- recipient (string)    - The recipient of the survey, valid recipients are 5-9, "EF", "Q1", "Q2", "Sek I", "Sek II" and "Alle".
-- date (string)         - date until the entry is valid and shown in the app.
+- title       - The entry title.
+- content     - The entry content.
+- recipient   - The recipient of the survey, valid recipients are 5-9, "EF", "Q1", "Q2", "Sek I", "Sek II" and "Alle".
+- date        - date until the entry is valid and shown in the app.
 
 + Request (application/json)
 
@@ -415,8 +415,8 @@ The following POST data is required:
         }
 
 ## Increment view count [/news/views/add]
-### Increment the view count of entry {id} by 1 [POST]
-Increment the view count by one.
+### Increment the view count [POST]
+Increment the view count of entry {id} by one.
 
 + Request (application/json)
 
@@ -435,7 +435,7 @@ Increment the view count by one.
 Deletes an entry.
 
 + Parameters
-    + id - entry id
+    + id (number) - The id of the entry you want to delete.
 
 + Response 200 (application/json)
     
@@ -451,7 +451,7 @@ With this action you can check the last mood-vote for a specified user.
 This request may fail if the user has not voted for the current day or the user id does not exist.
 
 + Parameters
-    + id - user id
+    + id (number) - The user id
 
 + Response 200 (application/json)
     
@@ -463,13 +463,15 @@ This request may fail if the user has not voted for the current day or the user 
         }
 
 ## Get all "mood"-votes [/mood/results?id={id}&filter={filter}]
-### Get a categorized list of mood votes averaged per day [GET]
-Returns a list of all past mood-votes categorized into three "teacher", "student" and "own". For the last category it is necessary to supply a user id. Furthermore,
-you have to possibility to add a filter.
+### Get a categorized list of mood votes [GET]
+Returns a list of all past mood-votes averaged per day and categorized into "teacher", "student" and "own". For the last category it is necessary to supply a user id. Furthermore,
+you have the possibility to add a filter.
+
+The request may fail if you try to get the "own"-category without a valid {id}.
 
 + Parameters
-    + id (number, optional) - user id
-    + filter (string, optional)- the categories you want to retrieve, separated by the pipe character '|', if none are supplied, all categories are returned
+    + id (number, optional) - The user id for the category "own".
+    + filter (string, optional)- The categories you want to retrieve, separated by the pipe character '|', if none are supplied, all categories are returned.
 
 + Response 200 (application/json)
     
