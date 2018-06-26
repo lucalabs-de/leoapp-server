@@ -1,6 +1,7 @@
 <?php
 
-require_once('dbconfig.php');
+require_once('./dbconfig.php');
+require_once('./secure.php');
 
 abstract class ApiEndpoint {
 
@@ -11,11 +12,12 @@ abstract class ApiEndpoint {
         $method = $_SERVER['REQUEST_METHOD'];
 
         if (strcmp(strtoupper($this->getMethod()), $method) !== 0) {
-            $this->returnApiError("Method Not Allowed", 405); ///TODO add Allowed
+            header("Allow: ".$this->getMethod());
+            $this->returnApiError("Method Not Allowed", 405);
         } 
 
         if (!$this->isAuthorized()) {
-            $this->returnApiError("Not Authorized", 401); ///TODO add WWW-Authenticate
+            $this->returnApiError("Not Authorized", 401);
         }
 
         if (strcmp($method, "POST") === 0) {
@@ -42,8 +44,7 @@ abstract class ApiEndpoint {
     }
 
     protected function isAuthorized() {
-        //TODO implement
-        return true;
+        return isSecure($_SERVER['HTTP_AUTHENTICATION'], $this->getConnection());
     }
 
     protected function exitOnBadRequest(...$params) {
