@@ -14,11 +14,15 @@
             $id = $db->real_escape_string($_POST['id']);
             $to = $db->real_escape_string($_POST['recipient']);
             $title = $db->real_escape_string($_POST['title']);
-            $answers = $db->real_escape_string($_POST['answers']); //TODO update answers to JSON format see documentation
             $description = $db->real_escape_string($_POST['desc']);
             $multiple = $db->real_escape_string($_POST['mult']);
+            $answers = $_POST['answers'];
 
-            parent::exitOnBadRequest($id, $to, $title, $answers, $description);
+            parent::exitOnBadRequest($id, $to, $title, $description);
+
+            if (sizeOf($answers) === 0) {
+                parent::returnApiError("Bad Request", 400);
+            }
 
             if (empty($multiple) || strlen($multiple) === 0) {
                 $multiple = 0;
@@ -57,7 +61,7 @@
 
             //INSERT ANSWERS
 
-            foreach (explode("|", $answers) as $answer) {
+            foreach ($answers as $answer) {
                 $query = "INSERT INTO Answers VALUES (null, ".$id.", '".$answer."')";
                 $result = $db->query($query);
                 if ($result === false) {

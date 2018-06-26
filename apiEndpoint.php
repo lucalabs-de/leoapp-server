@@ -20,6 +20,9 @@ abstract class ApiEndpoint {
 
         if (strcmp($method, "POST") === 0) {
             $_POST = json_decode(file_get_contents('php://input'), true);
+            if ($_POST == NULL) {
+                $this->returnApiError("Bad Request", 400);
+            }
         }
         $this->handleRequest();
     }
