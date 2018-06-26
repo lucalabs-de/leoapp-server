@@ -37,6 +37,18 @@
                 "createdate" => $assoc['c']
             );
 
+            $query = "SELECT identifier, UNIX_TIMESTAMP(timestamp) as ts FROM Devices WHERE user = $id";
+            $result = $db->query($query);
+
+            $devices = array();
+            while($row = $result->fetch_assoc()) {
+                $devices[] = array(
+                    "identifier" => $row['identifier'],
+                    "first_verification" => $row['ts']
+                );
+            }
+            $json["devices"] = $devices;
+
             parent::returnApiResponse($json);
 
             $db->close();

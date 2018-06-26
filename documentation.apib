@@ -11,6 +11,7 @@ news and (mood-)surveys.
 To successfully use the API, you must include the **authentication header** in your HTTP-requests. The value is based on the verification checksum of a specific user and
 has to be calculated each time prior to usage (see [GitHub](https://github.com/Leo-App/android/blob/5aa08afd84f5113b929aab7e299766203459244c/app/src/main/java/de/slgdev/leoapp/utility/Utils.java#L392-L414)).
 
+An exception to this verification is the "add user"-endpoint where the authentication happens over the verification checksum.
 ## Errors
 Errors follow the syntax
 
@@ -62,7 +63,8 @@ The response contains the following fields:
 
 ### Add a new user [POST]
 
-You may add a new user with this action. It takes a JSON Object containing the users login name and the checksum returned by the secureaccess verification.
+You may add a new user with this action. It takes a JSON Object containing the users login name, the checksum returned by the secureaccess verification and a custom
+identifier for the current device.
 
 + checksum (string) - The checksum
 + name (string) - The default username
@@ -72,6 +74,7 @@ You may add a new user with this action. It takes a JSON Object containing the u
         {
             "name": "giaspi270700"
             "checksum": "5bcf93bfb6ead57ea492a8a9a5182f57f9bbf965ff1b92e861d51db933d41cf4"
+            "device": "My custom devicename"
         }
 
 + Response 200 (application/json)
