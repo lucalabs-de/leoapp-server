@@ -60,12 +60,14 @@ The response contains the following fields:
         }
 
 ## Adding users [/user/add]
+### Add a new user device [POST]
 
-### Add a new user [POST]
+You may add a new user device with this action. It takes a JSON Object containing the users login name, the checksum returned by the secureaccess verification and a custom
+identifier for the current device. If the device already exists, the corresponding checksum is updated. If the user does not exist, a new one is created.
 
-You may add a new user with this action. It takes a JSON Object containing the users login name, the checksum returned by the secureaccess verification and a custom
-identifier for the current device.
+This request fails if the checksum is invalid.
 
+The follwing POST data is required:
 + checksum (string) - The checksum
 + device (string) - The devicename
 + name (string) - The default username
@@ -85,6 +87,27 @@ identifier for the current device.
             "data": {
                 "user_id": 1007
             }
+        }
+
+## Blocking user devices [/user/blockDevice]
+### Block a user device by name [POST]
+This action allows you to block certain devices. Once a device is blocked, communication with the API is not possible anymore because of device specific checksums.
+
+The follwing POST data is required:
++ device (string) - The devicename
++ user_id (string) - The user id 
+
++ Request (application/json)
+
+        {
+            "user_id": 1007,
+            "device": "My custom devicename"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "success": true
         }
 
 ## Updating Grade [/user/updateGrade]
