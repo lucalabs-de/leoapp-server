@@ -26,6 +26,10 @@
             parent::returnApiSuccess();
         }
 
+        protected function getPermissionLevel() {
+            return PermissionLevel::ONLY_TEACHERS;
+        }
+
     }
 
     new AddViewInstance();

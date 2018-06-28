@@ -2,6 +2,7 @@
 
 require_once('./dbconfig.php');
 require_once('./secure.php');
+require_once('./permissionLevels.php');
 
 abstract class ApiEndpoint {
 
@@ -32,6 +33,7 @@ abstract class ApiEndpoint {
     //Must return the desired HTTP Method as a string
     abstract protected function getMethod();
     abstract protected function handleRequest();
+    abstract protected function getPermissionLevel();
 
     protected function getConnection() {
         $db = new mysqli(dbhost, dbuser, dbpass, dbname);
@@ -44,6 +46,20 @@ abstract class ApiEndpoint {
     }
 
     protected function isAuthorized() {
+
+        switch ($this->getPermissionLevel()) {
+            case PermissionLevel::NONE:
+                return true;
+            case PermissionLevel::ONLY_AUTHENTICATION:
+                return isSecure($_SERVER['HTTP_AUTHENTICATION'], $this->getConnection());
+            case PermissionLevel::ONLY_TEACHERS:
+                $checksum = $_SERVER['HTTP_AUTHENTICATION'];
+                return isSecure($checksum, $this->getConnection()) && $this->getUserPermissionLevel($checksum) >= PermissionLevel::ONLY_TEACHERS;
+            case PermissionLevel::ONLY_ADMINS:
+                $checksum = $_SERVER['HTTP_AUTHENTICATION'];
+                return isSecure($checksum, $this->getConnection()) && $this->getUserPermissionLevel($checksum) >= PermissionLevel::ONLY_ADMINS;
+        }
+
         return isSecure($_SERVER['HTTP_AUTHENTICATION'], $this->getConnection());
     }
 
@@ -85,6 +101,11 @@ abstract class ApiEndpoint {
             "success" => true
         );
         echo json_encode($json, JSON_PRETTY_PRINT);
+    }
+
+    private function getUserPermissionLevel($checksum) {
+        //TODO implement
+        return 3;
     }
 
 }

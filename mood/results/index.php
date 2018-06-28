@@ -47,6 +47,10 @@
             $db->close();
         }
 
+        protected function getPermissionLevel() {
+            return PermissionLevel::ONLY_AUTHENTICATION;
+        }
+
         private function getArray($result) {
             if ($result === false) {
                 parent::returnApiError("Internal Server Error", 500);

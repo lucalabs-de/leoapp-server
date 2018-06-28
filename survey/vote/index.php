@@ -67,6 +67,10 @@
             $db->close();
         }
 
+        protected function getPermissionLevel() {
+            return PermissionLevel::ONLY_AUTHENTICATION;
+        }
+
     }
 
     new AddVote();

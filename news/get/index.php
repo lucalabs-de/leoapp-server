@@ -37,6 +37,10 @@
                 $json[] = $entry;
             }
             
+            protected function getPermissionLevel() {
+                return PermissionLevel::ONLY_AUTHENTICATION;
+            }
+
             parent::returnApiResponse($json);
 
             $db->close();

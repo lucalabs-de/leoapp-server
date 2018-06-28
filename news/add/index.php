@@ -35,6 +35,10 @@
             $db->close();
         }
 
+        protected function getPermissionLevel() {
+            return PermissionLevel::ONLY_TEACHERS;
+        }
+
     }
 
     new AddEntry();
