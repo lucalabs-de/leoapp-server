@@ -53,3 +53,12 @@ google-services.json
 freeline.py
 freeline/
 freeline_project_description.json
+
+# Sensible Information
+secure.php
+testAuth.php
+verify.php
+secureUser.php
+
+# Created API Documentation
+*.ico
