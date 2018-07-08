@@ -1,0 +1,623 @@
+FORMAT: 1A
+HOST: https://ucloud4schools.de/ext/slg
+
+# LeoApp REST API
+
+This API provides a RESTful way to interact with the LeoApp database and thus improves on the old system. Currently supported features are user related interactions,
+news and (mood-)surveys.
+
+## Authentication
+
+To successfully use the API, you must include the **authentication header** in your HTTP-requests. The value is based on the verification checksum of a specific user and
+has to be calculated each time prior to usage (see [GitHub](https://github.com/Leo-App/android/blob/5aa08afd84f5113b929aab7e299766203459244c/app/src/main/java/de/slgdev/leoapp/utility/Utils.java#L392-L414)).
+
+An exception to this verification is the "add user"-endpoint where the authentication happens over the verification checksum.
+## Errors
+Errors follow the syntax
+
+```json
+{
+    "success": false,
+    "error": {
+        "code": 400,
+        "message": "some error"
+    }
+}
+```
+
+The error codes correspond to the HTTP status codes.
+
+# Group User
+
+## Getting users [/user/get/{identifier}]
+### Get a user by identifier [GET]
+This allows you to get detailed information about a user.
+
+The response contains the following fields:
+- id: unique user-id
+- name: changeable, unique username
+- defaultname: default username used in verification process
+- grade: valid grades are _5_-_9_, _EF_, _Q1_, _Q2_ and _TEA_
+
+- permission: user permission level: 1 - student, 2 - teacher, 3 - admin
+- createdate: date of first verification
+
++ Parameters
+    + identifier (number | string) - Unique identifier for the user, may be his id or his username
+
++ Response 200 (application/json)   
+
+        {
+            "success": true,
+            "data": {
+                "id": "1007",
+                "name": "lucalabs",
+                "defaultname": "giaspi270700",
+                "grade": "Q2",
+                "permission": "3",
+                "createdate": "2017-05-31"
+            }
+        }
+
+## Adding users [/user/add]
+### Add a new user device [POST]
+
+You may add a new user device with this action. It takes a JSON Object containing the users login name, the checksum returned by the secureaccess verification and a custom
+identifier for the current device. If the device already exists, the corresponding checksum is updated. If the user does not exist, a new one is created.
+
+This request fails if the checksum is invalid.
+
+The follwing POST data is required:
++ checksum (string) - The checksum
++ device (string) - The devicename
++ name (string) - The default username
+
++ Request (application/json)
+
+        {
+            "name": "giaspi270700"
+            "checksum": "5bcf93bfb6ead57ea492a8a9a5182f57f9bbf965ff1b92e861d51db933d41cf4"
+            "device": "My custom devicename"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "success": true,
+            "data": {
+                "user_id": 1007
+            }
+        }
+
+## Blocking user devices [/user/blockDevice]
+### Block a user device by name [POST]
+This action allows you to block certain devices. Once a device is blocked, communication with the API is not possible anymore because of device specific checksums.
+
+The follwing POST data is required:
++ device (string) - The devicename
++ user_id (string) - The user id 
+
++ Request (application/json)
+
+        {
+            "user_id": 1007,
+            "device": "My custom devicename"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "success": true
+        }
+
+## Updating Grade [/user/updateGrade]
+### Update the grade of a specific user [POST]
+You can change the grade of a specific user with this action. It takes a JSON Object with the user id and the new desired grade. Once again, valid grade strings
+are 5-9, "EF", "Q1", "Q2" and "TEA".
+
++ Request (application/json)
+
+        {
+            "id": 1007
+            "grade": "TEA"
+        }
+
++ Response 200 (application/json)
+    
+        {
+            "success": true
+        }
+
+## Updating Name [/user/updateName]
+### Update the name of a user [POST]
+With this action you can change the name of a user. It takes a JSON Object with the user id and the new desired name. Once again, valid grade strings
+are 5-9, "EF", "Q1", "Q2" and "TEA". This request may fail if the new username is already taken or is a "defaultname" matching `^[a-z]{6}(\d{6}|$)$` .
+
++ Request (application/json)
+    
+        {
+            "id": 1007
+            "name": "lucalabs-de"
+        }
+
++ Response 200 (application/json)
+     
+        {
+            "success":true
+        }
+
+# Group survey
+## Getting surveys [/survey/get]
+### Receive a list of surveys [GET]
+You can get a list of currently active surveys by calling this endpoint. The response contains all relevant information about the surveys, as well as about its answers.
+
++ Response 200 (application/json)
+     
+        {
+            "success": true,
+            "data": [
+                {
+                    "id": "1018",
+                    "author": "Lord Bratwurst",
+                    "title": "Essen",
+                    "description": "Wohin?",
+                    "recipient": "Q2",
+                    "multiple": "1",
+                    "createdate": "1516372083",
+                    "answers": [
+                        {
+                            "id": "1086",
+                            "content": "Thail\u00e4ndisch"
+                        },
+                        {
+                            "id": "1087",
+                            "content": "italienisch"
+                        },
+                        {
+                            "id": "1088",
+                            "content": "griechisch "
+                        },
+                        {
+                            "id": "1089",
+                            "content": "Steakhaus "
+                        }
+                    ]
+                },
+                {
+                    "id": "1014",
+                    "author": "user 1",
+                    "title": "Motorrad fahren?",
+                    "description": "Soll ich?",
+                    "recipient": "Q2",
+                    "multiple": "0",
+                    "createdate": "1516305596",
+                    "answers": [
+                        {
+                            "id": "1075",
+                            "content": "ja"
+                        },
+                        {
+                            "id": "1076",
+                            "content": "ja "
+                        },
+                        {
+                            "id": "1077",
+                            "content": "auf jeden fall"
+                        },
+                        {
+                            "id": "1078",
+                            "content": "bestes"
+                        }
+                    ]
+                }
+            ]
+        }
+
+## Get votes for user [/survey/userVotes/{id}]
+### Get a list of all answers a specific user voted for [GET]
+Returns a list of the ids of all answers the user {id} has voted for. If the user has not voted yet or the user does not exist, the array is empty.
+
++ Parameters
+    + id (number) - User id
+
++ Response 200 (application/json)
+    
+        {
+            "success": true,
+            "data": {
+                "voted_for": [
+                    "1064",
+                    "1063",
+                    "1054",
+                    "1052",
+                    "1065",
+                    "1066",
+                    "1075",
+                    "1077",
+                    "1073",
+                    "1072",
+                    "1077",
+                    "1077",
+                    "1073"
+                ]
+            }
+        }
+
+## Get votes for survey [/survey/votes/{id}]
+### Get information about the results of a survey [GET]
+Returns detailed voting information about a given survey which contains inter alia the audience size and the total amount of users that have already voted.
+
++ Parameters
+    + id (number) - The survey id you want to get vote information for.
+
++ Response 200 (application/json)
+    
+        {
+            "success": true,
+            "data": {
+                "title": "test",
+                "audience_size": "12",
+                "registered_votes": "1",
+                "answers": [
+                    {
+                        "id": "answer 1",
+                        "votes": "1"
+                    },
+                    {
+                        "id": "sndjasd",
+                        "votes": "1"
+                    },
+                    {
+                        "id": "answer2",
+                        "votes": "0"
+                    }
+                ]
+            }
+        }
+
+## Adding surveys [/survey/add]
+### Add a new survey to the database [POST]
+Adds a new survey to the database. 
+
+The following POST data is required:
+- id - The userid of the author.
+- title - The surveys title.
+- desc - The surveys description.
+- multiple - Can you vote for multiple answers (1) or not (0)?
+- recipient  - The recipient of the survey, valid recipients are 5-9, "EF", "Q1", "Q2", "Sek I", "Sek II" and "Alle"
+- answers - Array of possible answers (maximum 5)
+
++ Request (application/json) 
+
+        {
+            "id": 1007,
+            "title": "Survey title",
+            "desc": "Survey description",
+            "recipient": "Q2",
+            "multiple": 1,
+            "answers": [
+                "answer 1",
+                "answer 2",
+                "answer 3"
+            ]
+        }
+
++ Response 200 (application/json)
+     
+        {
+            "success":true
+        }
+
+## Vote for survey [/survey/vote]
+### Register a new uservote for a survey [POST]
+Allows you to register a new vote for a specific answer id as a certain user. This request may fail if:
+- A: The user has already voted on the same survey and multiple answers are not supported
+- B: The answer id does not exist
+
+The request does not fail and is ignored if you try to vote for the same answer twice.
+
++ Request (application/json)
+
+        {
+            "user": 1007,
+            "answer": 1066
+        }
+
++ Response 200 (application/json)
+    
+        {
+            "success": true
+        }
+
+## Deleting surveys [/survey/remove/{id}]
+### Delete a survey by its id [DELETE]
+Deletes a survey.
+
++ Parameters
+    + id (number) - The survey id you want to delete.
+
++ Response 200 (application/json)
+    
+        {
+            "success": true
+        }
+
+# Group news
+
+## Getting entries [/news/get]
+### Get a list of all current entries (not yet expired) [GET]
+Gets a list of all current entries with detailed information. Same entries with different recipients are their own objects for easier management.
+
++ Response 200 (application/json)
+    
+        {
+            "success": true,
+            "data": [
+                {
+                    "id": "214",
+                    "title": "entrytitle",
+                    "content": "content",
+                    "recipient": "8",
+                    "view_counter": "1",
+                    "attachment": "null",
+                    "valid_until": "1525989600"
+                },
+                {
+                    "id": "215",
+                    "title": "entrytitle",
+                    "content": "content",
+                    "recipient": "9",
+                    "view_counter": "0",
+                    "attachment": "null",
+                    "valid_until": "1525989600"
+                },
+                {
+                    "id": "216",
+                    "title": "entrytitle",
+                    "content": "content",
+                    "recipient": "EF",
+                    "view_counter": "0",
+                    "attachment": "null",
+                    "valid_until": "1525989600"
+                },
+                {
+                    "id": "217",
+                    "title": "entrytitle",
+                    "content": "content",
+                    "recipient": "Q1",
+                    "view_counter": "0",
+                    "attachment": "null",
+                    "valid_until": "1525989600"
+                },
+                {
+                    "id": "218",
+                    "title": "entrytitle",
+                    "content": "content",
+                    "recipient": "Q2",
+                    "view_counter": "0",
+                    "attachment": "null",
+                    "valid_until": "1525989600"
+                }
+            ]
+        }
+    
+        The attachment field - if not null - contains an url to the corresponding resource.
+
+## Get view count [/news/views/get/{id}]
+### Get the view count (amount of students who read the entry) [GET]
+Get the view count for an entry.
+
++ Parameters
+    + id (number) - The entry id
+
++ Response 200 (application/json)
+    
+        {
+            "success": true,
+            "data": {
+                "views": "1"
+            }
+        }
+
+## Adding entries [/news/add]
+### Add a new entry to the school news board [POST]
+This action allows you to add a new entry to the in-app news board. 
+
+The following POST data is required:
+- title       - The entry title.
+- content     - The entry content.
+- recipient   - The recipient of the survey, valid recipients are 5-9, "EF", "Q1", "Q2", "Sek I", "Sek II" and "Alle".
+- date        - date until the entry is valid and shown in the app.
+
++ Request (application/json)
+
+        {
+            "title": "Entry title",
+            "content": "Entry content",
+            "recipient": "Alle",
+            "date": "2018-06-30"
+        }
+
++ Response 200 (application/json) 
+    
+        {
+            "success": true
+        }
+
+## Increment view count [/news/views/add]
+### Increment the view count [POST]
+Increment the view count of entry {id} by one.
+
++ Request (application/json)
+
+        {
+            "id": 214
+        }
+
++ Response 200 (application/json)
+    
+        {
+            "success": true
+        }
+
+## Deleting entries [/entry/remove/{id}]
+### Delete an entry by its id [DELETE]
+Deletes an entry.
+
++ Parameters
+    + id (number) - The id of the entry you want to delete.
+
++ Response 200 (application/json)
+    
+        {
+            "success": true
+        }
+
+# Group mood
+
+## Get current user vote [/mood/currentVote/{id}]
+### Get the "mood"-vote of a specific user for the current day [GET]
+With this action you can check the last mood-vote for a specified user. 
+This request may fail if the user has not voted for the current day or the user id does not exist.
+
++ Parameters
+    + id (number) - The user id
+
++ Response 200 (application/json)
+    
+        {
+            "success": true,
+            "data": {
+                "value": "5"
+            }
+        }
+
+## Get all "mood"-votes [/mood/results?id={id}&filter={filter}]
+### Get a categorized list of mood votes [GET]
+Returns a list of all past mood-votes averaged per day and categorized into "teacher", "student" and "own". For the last category it is necessary to supply a user id. Furthermore,
+you have the possibility to add a filter.
+
+The request may fail if you try to get the "own"-category without a valid {id}.
+
++ Parameters
+    + id (number, optional) - The user id for the category "own".
+    + filter (string, optional)- The categories you want to retrieve, separated by the pipe character '|', if none are supplied, all categories are returned.
+
++ Response 200 (application/json)
+    
+        {
+            "success": true,
+            "data": {
+                "student": [
+                    {
+                        "value": "5.0000",
+                        "date": "24.6.2018"
+                    },
+                    {
+                        "value": "2.5000",
+                        "date": "23.12.2017"
+                    },
+                    {
+                        "value": "1.5000",
+                        "date": "22.12.2017"
+                    },
+                    {
+                        "value": "2.5000",
+                        "date": "21.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "20.12.2017"
+                    },
+                    {
+                        "value": "1.5000",
+                        "date": "19.12.2017"
+                    },
+                    {
+                        "value": "2.4000",
+                        "date": "18.12.2017"
+                    },
+                    {
+                        "value": "2.5000",
+                        "date": "17.12.2017"
+                    },
+                    {
+                        "value": "2.5000",
+                        "date": "16.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "15.12.2017"
+                    }
+                ],
+                "teacher": [
+                    {
+                        "value": "2.0000",
+                        "date": "23.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "22.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "21.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "20.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "18.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "17.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "15.12.2017"
+                    },
+                    {
+                        "value": "3.0000",
+                        "date": "14.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "13.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "11.12.2017"
+                    },
+                    {
+                        "value": "2.0000",
+                        "date": "10.12.2017"
+                    }
+                ]
+            }
+        }
+
+
+## Vote for mood-survey [/mood/vote]
+### Register a new mood-vote [POST]
+Allows you to register a new mood-vote for a certain user. This request may fail if:
+- A: The user id does not exist
+- B: The vote id is not between 1 and 5
+
+Contrary to the regular surveys, if you try to register multiple votes per user per day, the vote is updated.
+
++ Request (application/json)
+
+        {
+            "id": 1007,
+            "vote_id": 5
+        }
+
++ Response 200 (application/json)
+     
+        {
+            "success": true
+        }
+
