@@ -56,7 +56,7 @@
 
             $id = $result->fetch_assoc()['uid'];
 
-            $query = "INSERT INTO Devices VALUES ('$device', $id, '$checksum', null) ON DUPLICATE KEY UPDATE checksum = '$checksum'";
+            $query = "INSERT INTO Devices (identifier, user, checksum) VALUES ('$device', $id, '$checksum') ON DUPLICATE KEY UPDATE checksum = '$checksum'";
             $result = $db->query($query);
         
             if ($result === false) {

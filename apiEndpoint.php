@@ -1,8 +1,8 @@
 <?php
 
-require_once('./dbconfig.php');
-require_once('./secure.php');
-require_once('./permissionLevels.php');
+require_once('dbconfig.php');
+require_once('secure.php');
+require_once('permissionLevels.php');
 
 abstract class ApiEndpoint {
 
