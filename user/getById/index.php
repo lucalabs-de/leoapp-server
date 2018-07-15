@@ -29,7 +29,7 @@
             $assoc = $result->fetch_assoc();
 
             $json = array(
-                "id" => $id,
+                "id" => intval($id),
                 "name" => $assoc['n'],
                 "defaultname" => $assoc['d'],
                 "grade" => $assoc['k'],

@@ -51,13 +51,15 @@ abstract class ApiEndpoint {
             case PermissionLevel::NONE:
                 return true;
             case PermissionLevel::ONLY_AUTHENTICATION:
-                return isSecure($_SERVER['HTTP_AUTHENTICATION'], $this->getConnection());
+                return isSecure($_SERVER['HTTP_AUTHENTICATION'], $_SERVER['HTTP_DEVICE'], $this->getConnection());
             case PermissionLevel::ONLY_TEACHERS:
                 $checksum = $_SERVER['HTTP_AUTHENTICATION'];
-                return isSecure($checksum, $this->getConnection()) && $this->getUserPermissionLevel($checksum) >= PermissionLevel::ONLY_TEACHERS;
+                $device = $_SERVER['HTTP_DEVICE'];
+                return isSecure($checksum, $device, $this->getConnection()) && $this->getUserPermissionLevel($checksum) >= PermissionLevel::ONLY_TEACHERS;
             case PermissionLevel::ONLY_ADMINS:
                 $checksum = $_SERVER['HTTP_AUTHENTICATION'];
-                return isSecure($checksum, $this->getConnection()) && $this->getUserPermissionLevel($checksum) >= PermissionLevel::ONLY_ADMINS;
+                $device = $_SERVER['HTTP_DEVICE'];
+                return isSecure($checksum, $device, $this->getConnection()) && $this->getUserPermissionLevel($checksum) >= PermissionLevel::ONLY_ADMINS;
         }
 
         return isSecure($_SERVER['HTTP_AUTHENTICATION'], $this->getConnection());
@@ -92,7 +94,7 @@ abstract class ApiEndpoint {
             "success" => true,
             "data" => $response
         );
-        echo json_encode($json, JSON_PRETTY_PRINT);
+        echo json_encode($json, JSON_PRETTY_PRINT|JSON_NUMERIC_CHECK);
     }
 
     protected function returnApiSuccess() {
