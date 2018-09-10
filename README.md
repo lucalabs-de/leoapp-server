@@ -1,4 +1,4 @@
-# leoapp-server
+# deprecated
 Serverkomponente der LeoApp
 
 #### FTP Development-Server
